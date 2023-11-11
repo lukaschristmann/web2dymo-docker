@@ -144,7 +144,7 @@ if(isset($_GET['download'])) {
 			break;
 			case "tmp5":
 			$generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-			$barcode = $generator->getBarcode(iconv('UTF-8', 'windows-1252', $form_barcode1), $generator::TYPE_CODE_128, 6);
+			$barcode = $generator->getBarcode(iconv('UTF-8', 'windows-1252', $form_barcode1), $generator::TYPE_EAN_13, 6);
 			$barcodefile = $config['tmpdir'].tempfile('web2dymo', 'png', $config['tmpdir']);
 			file_put_contents($barcodefile, $barcode);
 			$printermodel = "dymo450";
@@ -154,6 +154,23 @@ if(isset($_GET['download'])) {
 				$pdf->SetFont('Arial','B',14);
 				$pdf->Image($barcodefile, 5, 5, 78, 18);
 				$pdf->Text(5, 30, iconv('UTF-8', 'windows-1252', $form_barcode1));
+				if($form_logo) {
+					$pdf->Image("assets/wwlabs-150x150.png", 75, 25, 8, 8);
+				}
+			}
+			break;
+			case "tmp6":
+			$generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+			$barcode = $generator->getBarcode(iconv('UTF-8', 'windows-1252', $form_barcode2), $generator::TYPE_CODE_128, 6);
+			$barcodefile = $config['tmpdir'].tempfile('web2dymo', 'png', $config['tmpdir']);
+			file_put_contents($barcodefile, $barcode);
+			$printermodel = "dymo450";
+			$pdf = new FPDF('L','mm',array(88,36));
+			for($i=1;$i<=$form_copies;$i++) {
+				$pdf->addPage('L');
+				$pdf->SetFont('Arial','B',14);
+				$pdf->Image($barcodefile, 5, 5, 78, 18);
+				$pdf->Text(5, 30, iconv('UTF-8', 'windows-1252', $form_text));
 				if($form_logo) {
 					$pdf->Image("assets/wwlabs-150x150.png", 75, 25, 8, 8);
 				}
